@@ -1,3 +1,3 @@
 #!/bin/bash
-du >>log.txt
-ps >>log.txt
+du >>datausage.txt
+ps >>process.txt
