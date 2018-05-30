@@ -1,3 +1,3 @@
 #!/bin/bash
-du >>datausage.txt
+du >>process.txt
 ps >>process.txt
