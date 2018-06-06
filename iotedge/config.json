@@ -1,4 +1,3 @@
-
 {
     "subscription_id" : "2927c217-b119-4d3b-8a13-82a1c3a16c8f",
     "resources" : {
@@ -6,7 +5,7 @@
             "type" : "AzureRMDeployment",
             "resource_group":"iot-dynocard-demo",
             "location" : "eastus",
-            "template" : "./base_infrastructure.json",
+            "template" : "https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/base_infrastructure.json",
             "parameters" : {
                 "serviceBusNamespaceName" : "iot-dynocard-demo-svcbus",
                 "serviceBusQueueName" : "dynocard-output",
@@ -20,7 +19,7 @@
             "type" : "AzureRMDeployment",
             "resource_group":"iot-dynocard-demo-devices",
             "location" : "eastus",
-            "template" : "./templates/vnet.json",
+            "template" : "https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/vnet.json",
             "parameters" : {
                 "resourceName": "iot-dynocard-demo-vnet",
                 "addressPrefix": "10.0.0.0/16",
@@ -35,7 +34,7 @@
             "deviceHub"  : "iot-dynocard-demo-hub",
             "deviceUsername" : "edgeuser",
             "devicePassword" : "tzi61HcJjczlD6wBAvOM37PBPCUJkiTurwEV",
-            "deviceConfig"   : "./edge_device_config.json",
+            "deviceConfig"   : "https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/edge_device_config.json",
             "vnetName"   : "iot-dynocard-demo-vnet",
             "vnetGroup"  : "iot-dynocard-demo-devices",
             "subnetName" : "edge_devices"
