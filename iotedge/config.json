@@ -1,1 +1,44 @@
 
+{
+    "subscription_id" : "2927c217-b119-4d3b-8a13-82a1c3a16c8f",
+    "resources" : {
+        "base_infrastructure" : {
+            "type" : "AzureRMDeployment",
+            "resource_group":"iot-dynocard-demo",
+            "location" : "eastus",
+            "template" : "./base_infrastructure.json",
+            "parameters" : {
+                "serviceBusNamespaceName" : "iot-dynocard-demo-svcbus",
+                "serviceBusQueueName" : "dynocard-output",
+                "iotHubName":"iot-dynocard-demo-hub",
+                "iotHubSkuName" : "S1",
+                "iotHubSkuUnits" : "1",
+                "iotHubD2cPartitions" : "4"
+            }
+        },
+        "vnet" : {
+            "type" : "AzureRMDeployment",
+            "resource_group":"iot-dynocard-demo-devices",
+            "location" : "eastus",
+            "template" : "./templates/vnet.json",
+            "parameters" : {
+                "resourceName": "iot-dynocard-demo-vnet",
+                "addressPrefix": "10.0.0.0/16",
+                "edgeDeviceSubnetName"   : "edge_devices",
+                "edgeDeviceSubnetPrefix" : "10.0.1.0/24"
+            }
+        },
+        "edge_device_1" : {
+            "type" : "AzureIotEdgeDeviceVm",
+            "location"   : "eastus",
+            "deviceName" : "iot-dynocard-demo-device_1",
+            "deviceHub"  : "iot-dynocard-demo-hub",
+            "deviceUsername" : "edgeuser",
+            "devicePassword" : "tzi61HcJjczlD6wBAvOM37PBPCUJkiTurwEV",
+            "deviceConfig"   : "./edge_device_config.json",
+            "vnetName"   : "iot-dynocard-demo-vnet",
+            "vnetGroup"  : "iot-dynocard-demo-devices",
+            "subnetName" : "edge_devices"
+        }
+    }
+}
