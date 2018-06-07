@@ -48,31 +48,31 @@ function deploy {
         [parameter(Mandatory=$true)]
         [hashtable] $resource
     )
-    ## check that the az cli has the azure-cli-iot-ext extension
-    $extension = (az extension show --name azure-cli-iot-ext --output json | convertfrom-json)
+    ## check that the azure cli has the azure-cli-iot-ext extension
+    $extension = (azure extension show --name azure-cli-iot-ext --output json | convertfrom-json)
     if(-not $extension) {
         write-info "Adding Azure-CLI IoT Extension..."
-        $extension = (az extension add --name azure-cli-iot-ext --output json | convertfrom-json)
+        $extension = (azure extension add --name azure-cli-iot-ext --output json | convertfrom-json)
         write-info ("Successfully added {0} v{1}" -f $extension.metadata.name,$extension.metadata.version)
     }
 
     ## check if device-identity exists; if not, create one
-    $identity = (az iot hub device-identity show --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | ConvertTo-Json)
+    $identity = (azure iot hub device-identity show --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | ConvertTo-Json)
     if($identity -eq $null) {
         ## create an identity for the IoT device
         write-info ("Creating device identity in hub {0} for device {1}" -f $resource.deviceHub,$resource.deviceName)
-        $identity = (az iot hub device-identity create --hub-name $resource.deviceHub --device-id $resource.deviceName --edge-enabled --output json | convertfrom-json)
+        $identity = (azure iot hub device-identity create --hub-name $resource.deviceHub --device-id $resource.deviceName --edge-enabled --output json | convertfrom-json)
     }
 
     ## assign the device's configuration
     if(test-path $resource.deviceConfig) {
-        $config = (az iot hub apply-configuration --hub-name $resource.deviceHub --device-id $resource.deviceName --content $resource.deviceConfig --output json | convertFrom-json)
+        $config = (azure iot hub apply-configuration --hub-name $resource.deviceHub --device-id $resource.deviceName --content $resource.deviceConfig --output json | convertFrom-json)
     } else {
         write-error ("Unable to find config file '{0}' in '{1}'" -f $resource.deviceConfig,$PWD)
     }
 
     ## get the connection string for the device
-    $connStr =  (az iot hub device-identity show-connection-string --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | convertFrom-json).cs
+    $connStr =  (azure iot hub device-identity show-connection-string --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | convertFrom-json).cs
 
     ## expand the cloud-init template and convert it to base64
     $template   = resolve-path (join-path $BASE_PATH 'edge_device_cloudinit.yaml')
@@ -112,7 +112,7 @@ function destroy {
 
     write-info "Destroying $name..."
     # delete the device's identity
-    $identity = (az iot hub device-identity delete --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | ConvertTo-Json)
+    $identity = (azure iot hub device-identity delete --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | ConvertTo-Json)
 
     # delete the device's resource group 
     $result = Remove-AzureRmResourceGroup -Name $resource.resource_group -Force
