@@ -1,20 +1,6 @@
 {
     "subscription_id" : "7eab3893-bd71-4690-84a5-47624df0b0e5",
     "resources" : {
-        "base_infrastructure" : {
-            "type" : "AzureRMDeployment",
-            "resource_group":"iot-dynocard-demo",
-            "location" : "eastus",
-            "template" : "https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/base_infrastructure.json",
-            "parameters" : {
-                "serviceBusNamespaceName" : "iot-dynocard-demo-svcbus",
-                "serviceBusQueueName" : "dynocard-output",
-                "iotHubName":"iot-dynocard-demo-hub",
-                "iotHubSkuName" : "S1",
-                "iotHubSkuUnits" : "1",
-                "iotHubD2cPartitions" : "4"
-            }
-        },
         "vnet" : {
             "type" : "AzureRMDeployment",
             "resource_group":"iot-dynocard-demo-devices",
