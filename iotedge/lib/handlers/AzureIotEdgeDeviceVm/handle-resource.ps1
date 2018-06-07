@@ -75,7 +75,7 @@ function deploy {
     $connStr =  (az iot hub device-identity show-connection-string --hub-name $resource.deviceHub --device-id $resource.deviceName --output json | convertFrom-json).cs
 
     ## expand the cloud-init template and convert it to base64
-    $template   = resolve-path (join-path $SELF_PATH 'edge_device_cloudinit.yaml')
+    $template   = resolve-path (join-path $BASE_PATH 'edge_device_cloudinit.yaml')
     $customData = get-content $template | expand-template.ps1 -tokens @{connstr=$connStr}
     $customData =  $customData | convertto-base64.ps1
 
@@ -92,7 +92,7 @@ function deploy {
     }
 
 
-    $template = resolve-path (join-path $SELF_PATH 'iot_edge_device.json')
+    $template = resolve-path (join-path $BASE_PATH 'iot_edge_device.json')
     $deployment = deploy-template `
         -name $name `
         -resourceGroup $resource.resource_group `
