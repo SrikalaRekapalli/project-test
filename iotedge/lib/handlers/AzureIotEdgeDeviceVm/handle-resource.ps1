@@ -23,11 +23,11 @@ Param(
 )
 
 ## build path to the base project folder
-$BASE_PATH = resolve-path (join-path (split-path -parent $MyInvocation.MyCommand.path) "../../..")
-
+# $BASE_PATH = resolve-path (join-path (split-path -parent $MyInvocation.MyCommand.path) "../../..")
+$BASE_PATH = pwd
 ## figure out some info about ourself
-$SELF_PATH = split-path -parent $MyInvocation.MyCommand.Path
-$SELF_NAME = split-path -leaf $MyInvocation.PSCommandPath
+# $SELF_PATH = split-path -parent $MyInvocation.MyCommand.Path
+# $SELF_NAME = split-path -leaf $MyInvocation.PSCommandPath
 
 ## add utilty_scripts to our path
 $SCRIPTS_PATH = (join-path $BASE_PATH "lib/utility_scripts")
