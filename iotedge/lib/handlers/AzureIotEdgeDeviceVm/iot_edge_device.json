@@ -20,12 +20,6 @@
           "description": "Password for the Virtual Machine."
         }
       },
-      "base64CustomData": {
-        "type": "string",
-        "metadata": {
-          "description": "Base64 encoded custom data file to pass to Virtual Machine."
-        }
-      },
       "dnsLabelPrefix": {
         "type": "string",
         "metadata": {
@@ -128,8 +122,7 @@
           "osProfile": {
             "computerName": "[parameters('resourceName')]",
             "adminUsername": "[parameters('adminUsername')]",
-            "adminPassword": "[parameters('adminPassword')]",
-            "customData": "[parameters('base64CustomData')]"
+            "adminPassword": "[parameters('adminPassword')]"
           },
           "storageProfile": {
             "imageReference": {
