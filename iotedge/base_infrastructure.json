@@ -1,207 +1,41 @@
 {
-    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "serviceBusNamespaceName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Service Bus namespace"
-            }
+        "resourceName": {
+            "type": "string"
         },
-        "serviceBusQueueName": {
-            "type": "string",
-            "metadata": {
-                "description": "Name of the Queue"
-            }
+        "addressPrefix": {
+            "type": "string"
         },
-        "iotHubName": {
-            "type": "string",
-            "metadata": {
-                "description": "IoT Hub Name"
-            }
+        "edgeDeviceSubnetName": {
+            "type": "string"
         },
-        "iotHubSkuName": {
-            "type": "string",
-            "defaultValue": "F1",
-            "metadata": {
-                "description": "IoT Hub SKU name"
-            },
-            "allowedValues": [
-                "F1",
-                "S1",
-                "S2",
-                "S3"
-            ]
-        },
-        "iotHubSkuUnits": {
-            "type": "string",
-            "defaultValue": "1",
-            "metadata": {
-                "description": "Non-Zero number of IoT Hub message units"
-            }
-        },
-        "iotHubD2cPartitions": {
-            "type": "string",
-            "defaultValue": "2",
-            "metadata": {
-                "description": "Number of IoT Hub device-to-cloud message partitons (value must be 2 or greater)"
-            }
-        },
-        "iotHubFeatures": {
-            "type": "string",
-            "defaultValue": "None"
+        "edgeDeviceSubnetPrefix": {
+            "type": "string"
         }
-    },
-    "variables": {
-        "serviceBusDefaultSASKeyName": "RootManageSharedAccessKey",
-        "serviceBusAuthRuleResourceId": "[resourceId('Microsoft.ServiceBus/namespaces/authorizationRules', parameters('serviceBusNamespaceName'), variables('serviceBusDefaultSASKeyName'))]"
     },
     "resources": [
         {
-            "type": "Microsoft.ServiceBus/namespaces",
-            "apiVersion": "2017-04-01",
-            "name": "[parameters('serviceBusNamespaceName')]",
+            "apiVersion": "2017-08-01",
+            "name": "iot-dynocard-demo-vnet",
+            "type": "Microsoft.Network/virtualNetworks",
             "location": "[resourceGroup().location]",
-            "sku": {
-                "name": "Standard"
-            },
-            "properties": {},
-            "resources": [
-                {
-                    "apiVersion": "2017-04-01",
-                    "name": "[parameters('serviceBusQueueName')]",
-                    "type": "Queues",
-                    "dependsOn": [
-                        "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
-                    ],
-                    "properties": {
-                        "lockDuration": "PT5M",
-                        "maxSizeInMegabytes": "1024",
-                        "requiresDuplicateDetection": "false",
-                        "requiresSession": "false",
-                        "defaultMessageTimeToLive": "P10675199DT2H48M5.4775807S",
-                        "deadLetteringOnMessageExpiration": "false",
-                        "duplicateDetectionHistoryTimeWindow": "PT10M",
-                        "maxDeliveryCount": "10",
-                        "autoDeleteOnIdle": "P10675199DT2H48M5.4775807S",
-                        "enablePartitioning": "false",
-                        "enableExpress": "false"
-                    }
-                }
-            ]
-        },
-        {
-            "type": "Microsoft.Devices/IotHubs",
-            "apiVersion": "2017-07-01",
-            "name": "[parameters('iotHubName')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.ServiceBus/namespaces/', parameters('serviceBusNamespaceName'))]"
-            ],
             "properties": {
-                "operationsMonitoringProperties": {
-                    "events": {
-                        "None": "None",
-                        "Connections": "None",
-                        "DeviceTelemetry": "None",
-                        "C2DCommands": "None",
-                        "DeviceIdentityOperations": "None",
-                        "FileUploadOperations": "None",
-                        "Routes": "None"
-                    }
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "[parameters('addressPrefix')]"
+                    ]
                 },
-                "eventHubEndpoints": {
-                    "events": {
-                        "retentionTimeInDays": 1,
-                        "partitionCount": "[parameters('iotHubD2cPartitions')]"
-                    },
-                    "operationsMonitoringEvents": {
-                        "retentionTimeInDays": 1,
-                        "partitionCount": "[parameters('iotHubD2cPartitions')]"
-                    }
-                },
-                "routing": {
-                    "endpoints": {
-                        "serviceBusQueues": [
-                            {
-                                "name": "dynocard-output",
-                                "connectionString": "[concat(listkeys(variables('serviceBusAuthRuleResourceId'), '2017-04-01').primaryConnectionString,';EntityPath=dynocard-output')]",
-                                "resourceGroup": "[resourceGroup().name]",
-                                "subscriptionId": "[subscription().subscriptionId]"
-                            }
-                        ]
-                    },
-                    "routes": [
-                        {
-                            "name": "IoTHubLoopback",
-                            "source": "DeviceMessages",
-                            "condition": "true",
-                            "endpointNames": [
-                                "events"
-                            ],
-                            "isEnabled": true
-                        },
-                        {
-                            "name": "MessageProcessing",
-                            "source": "DeviceMessages",
-                            "condition": "true",
-                            "endpointNames": [
-                                "dynocard-output"
-                            ],
-                            "isEnabled": true
+                "subnets": [
+                    {
+                        "name": "[parameters('edgeDeviceSubnetName')]",
+                        "properties": {
+                            "addressPrefix": "[parameters('edgeDeviceSubnetPrefix')]"
                         }
-                    ],
-                    "fallbackRoute": {
-                        "name": "$fallback",
-                        "source": "DeviceMessages",
-                        "condition": "true",
-                        "endpointNames": [
-                            "events"
-                        ],
-                        "isEnabled": false
                     }
-                },
-                "storageEndpoints": {
-                    "$default": {
-                        "sasTtlAsIso8601": "PT1H",
-                        "connectionString": "",
-                        "containerName": ""
-                    }
-                },
-                "enableFileUploadNotifications": false,
-                "cloudToDevice": {
-                    "maxDeliveryCount": 10,
-                    "defaultTtlAsIso8601": "PT1H",
-                    "feedback": {
-                        "lockDurationAsIso8601": "PT1M",
-                        "ttlAsIso8601": "PT1H",
-                        "maxDeliveryCount": 10
-                    }
-                },
-                "features": "[parameters('iotHubFeatures')]"
-            },
-            "sku": {
-                "name": "[parameters('iotHubSkuName')]",
-                "capacity": "[parameters('iotHubSkuUnits')]"
+                ]
             }
-        },
-        {
-            "apiVersion": "2016-02-03",
-            "type": "Microsoft.Devices/iotHubs/eventhubEndpoints/ConsumerGroups",
-            "name": "[concat(parameters('iotHubName'), '/events/IoTHubLoopback')]",
-            "location": "[resourceGroup().location]",
-            "dependsOn": [
-                "[concat('Microsoft.Devices/iothubs/', parameters('iotHubName'))]"
-            ]
-        },
-        {
-            "apiVersion": "2016-02-03",
-            "type": "Microsoft.Devices/iotHubs/eventhubEndpoints/ConsumerGroups",
-            "name": "[concat(parameters('iotHubName'), '/events/MessageProcessing')]",
-            "dependsOn": [
-                "[concat('Microsoft.Devices/iothubs/', parameters('iotHubName'))]"
-            ]
         }
-    ],
-    "outputs": {}
+    ]
 }
