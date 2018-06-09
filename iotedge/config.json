@@ -3,7 +3,7 @@
     "resources" : {
         "vnet" : {
             "type" : "AzureRMDeployment",
-            "resource_group":"autoacnt",
+            "resource_group":"iot-dynocard-demo-device_1",
             "location" : "eastus",
             "template" : "https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/vnet.json",
             "parameters" : {
