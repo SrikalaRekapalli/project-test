@@ -1,16 +1,16 @@
 #!/bin/bash
-IoThubName=iothubiot
-DeviceName=iothubiot-device
-DeviceConfig=https://raw.githubusercontent.com/SrikalaRekapalli/project-test/master/iotedge/edge_device_config.json
-
+IoThubName=$1
+DeviceName=$2
+DeviceConfig=$3
 #Install Azure-CLI
 AZ_REPO=$(lsb_release -cs)
 echo "deb [arch=amd64] https://packages.microsoft.com/repos/azure-cli/ $AZ_REPO main" | sudo tee /etc/apt/sources.list.d/azure-cli.list
 sudo apt-key adv --keyserver packages.microsoft.com --recv-keys 417A0893
+curl -L https://packages.microsoft.com/keys/microsoft.asc | sudo apt-key add -
 sudo apt-get update
-sudo apt-get install apt-transport-https -y
-sudo apt-get update && sudo apt-get install azure-cli -y
-
+sudo apt-get install apt-transport-https -y 
+sudo apt-get update
+sudo apt-get install azure-cli -y
 ##Add Azure-CLI IoT Extensionn
 az extension add --name azure-cli-iot-ext --output json
 ## create an identity for the IoT device
