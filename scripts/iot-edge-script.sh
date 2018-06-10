@@ -1,3 +1,4 @@
+#!/bin/bash
 IoThubName=$1
 DeviceName=$2
 DeviceConfig=$3
