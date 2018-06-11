@@ -34,6 +34,18 @@
         },
         "DeviceConfigName": {
             "type": "string"
+        },
+        "TenantID": {
+            "type": "string"
+        },
+        "ApplicationID": {
+            "type": "string"
+        },
+        "Certificate": {
+            "type": "securestring"
+        },
+        "SubscriptionID":{
+            "type": "string"
         }
     },
     "variables": {},
@@ -54,7 +66,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('bash iot-edge.sh',' ',parameters('UserName'),' ',parameters('IoThubName'),' ',parameters('DeviceName'),' ',parameters('DeviceConfig'),' ',parameters('DeviceConfigName'))]"
+                    "commandToExecute": "[concat('bash iot-edge.sh',' ',parameters('UserName'),' ',parameters('IoThubName'),' ',parameters('DeviceName'),' ',parameters('DeviceConfig'),' ',parameters('DeviceConfigName'),' ',parameters('TenantID'),' ',parameters('ApplicationID'),' ',parameters('Certificate'),' ',parameters('SubscriptionID'))]"
                 }
             }
         }
