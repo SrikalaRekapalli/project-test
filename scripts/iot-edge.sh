@@ -4,7 +4,10 @@ IoThubName=$2
 DeviceName=$3
 DeviceConfig=$4
 DeviceConfigName=$5
-
+TenantID=$6
+ApplicationID=$7
+Certificate=$8
+SubscriptionID=$9
 sudo apt install -y python-pip
 sudo apt install -y docker.io
 #Install Azure-CLI
@@ -15,6 +18,8 @@ sudo apt-get update
 sudo apt-get install apt-transport-https -y
 sudo apt-get update && sudo apt-get install azure-cli -y
 az extension add --name azure-cli-iot-ext
+az login --service-principal -u $ApplicationID -p $Certificate --tenant $TenantID
+az account set --subscription $SubscriptionID
 cd /home/$UserName/
 wget https://packages.microsoft.com/repos/azure-cli/pool/main/a/azure-cli/azure-cli_2.0.32-1~wheezy_all.deb
 sudo dpkg -i azure-cli_2.0.32-1~wheezy_all.deb
