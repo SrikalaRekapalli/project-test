@@ -1,0 +1,62 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vmName": {
+            "type": "string"
+        },
+        "extName": {
+            "type": "string"
+        },
+        "vmApiVersion": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        },
+        "templateUrl": {
+            "type": "string"
+        },
+        "scriptName": {
+            "type": "string"
+        },
+        "UserName": {
+            "type": "string"
+        },
+        "IoThubName": {
+            "type": "string"
+        },
+        "DeviceName": {
+            "type": "string"
+        },
+        "DeviceConfig": {
+            "type": "string"
+        },
+        "DeviceConfigName": {
+            "type": "string"
+        }
+    },
+    "variables": {},
+    "resources": [
+        {
+            "type": "Microsoft.Compute/virtualMachines/extensions",
+            "name": "[concat(parameters('vmName'),'/',parameters('extName'))]",
+            "apiVersion": "[parameters('vmApiVersion')]",
+            "location": "[parameters('location')]",
+            "properties": {
+                "publisher": "Microsoft.Azure.Extensions",
+                "type": "CustomScript",
+                "typeHandlerVersion": "2.0",
+                "autoUpgradeMinorVersion": true,
+                "settings": {
+                    "fileUris": [
+                        "[concat(parameters('templateUrl'),'scripts/',parameters('ScriptName'))]"
+                    ]
+                },
+                "protectedSettings": {
+                    "commandToExecute": "[concat('bash iot-edge.sh',' ',parameters('UserName'),' ',parameters('IoThubName'),' ',parameters('DeviceName'),' ',parameters('DeviceConfig'),' ',parameters('DeviceConfigName'))]"
+                }
+            }
+        }
+    ]
+}
