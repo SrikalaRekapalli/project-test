@@ -38,10 +38,10 @@
         "TenantID": {
             "type": "string"
         },
-        "ApplicationID": {
+        "AzurePortalUsername": {
             "type": "string"
         },
-        "Certificate": {
+        "AzurePortalPassword": {
             "type": "securestring"
         },
         "SubscriptionID":{
@@ -66,7 +66,7 @@
                     ]
                 },
                 "protectedSettings": {
-                    "commandToExecute": "[concat('bash iot-edge.sh',' ',parameters('UserName'),' ',parameters('IoThubName'),' ',parameters('DeviceName'),' ',parameters('DeviceConfig'),' ',parameters('DeviceConfigName'),' ',parameters('TenantID'),' ',parameters('ApplicationID'),' ',parameters('Certificate'),' ',parameters('SubscriptionID'))]"
+                    "commandToExecute": "[concat('bash iot-edge.sh',' ',parameters('UserName'),' ',parameters('IoThubName'),' ',parameters('DeviceName'),' ',parameters('DeviceConfig'),' ',parameters('DeviceConfigName'),' ',parameters('TenantID'),' ',parameters('AzurePortalUsername'),' ',parameters('AzurePortalPassword'),' ',parameters('SubscriptionID'))]"
                 }
             }
         }
